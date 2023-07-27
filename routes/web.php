@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'verified']],function(){
+
+    //route dashboard
+    Route::get('/dashboard',[DashboardController::class,'dashboard'])->name('dashboard');
+    //route users
+    Route::resource('users',UserController::class);
+    Route::get('users/update-status/{id}',[UserController::class,'status_update'])->name('users.update-status');
+
+});
+require __DIR__.'/auth.php';
