@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -15,7 +17,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::query()->get();
-        return view('admin.pages.user.index',compact('users'));
+        return view('admin.pages.user.index', compact('users'));
     }
 
     /**
@@ -32,7 +34,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->getSanitized();
-        if($request->has('image')){
+        if ($request->has('image')) {
             $data['image'] = $this->upload_file($request->file('image'), ('users'));
         }
         User::create($data);
@@ -43,9 +45,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(User $user)
     {
-
+        $roles = Role::all();
+        $permissions = Permission::all();
+        return view('admin.pages.user.show', compact('user', 'roles', 'permissions'));
     }
 
     /**
@@ -54,7 +58,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
 
-        return view('admin.pages.user.edit',compact('user'));
+        return view('admin.pages.user.edit', compact('user'));
     }
 
     /**
@@ -63,7 +67,7 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $data = $request->getSanitized();
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             @unlink($user->image);
             $data['image'] = $this->upload_file($request->file('image'), ('users'));
         }
@@ -77,6 +81,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($user->hasRole('admin')) {
+            return back()->with('success', 'you are admin.');
+        }
         @unlink($user->image);
         $user->delete();
         session()->flash('success', 'Item Deleted  sucessfully');
@@ -92,4 +99,42 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+
+    public function assignRole(Request $request, User $user)
+    {
+        if ($user->hasRole($request->role)) {
+            return back()->with('error', 'Role exists.');
+        }
+
+        $user->assignRole($request->role);
+        return back()->with('success', 'Role assigned.');
+    }
+
+    public function removeRole(User $user, Role $role)
+    {
+        if ($user->hasRole($role)) {
+            $user->removeRole($role);
+            return back()->with('success', 'Role removed.');
+        }
+
+        return back()->with('error', 'Role not exists.');
+    }
+
+    public function givePermission(Request $request, User $user)
+    {
+        if ($user->hasPermissionTo($request->permission)) {
+            return back()->with('error', 'Permission exists.');
+        }
+        $user->givePermissionTo($request->permission);
+        return back()->with('success', 'Permission added.');
+    }
+
+    public function revokePermission(User $user, Permission $permission)
+    {
+        if ($user->hasPermissionTo($permission)) {
+            $user->revokePermissionTo($permission);
+            return back()->with('success', 'Permission revoked.');
+        }
+        return back()->with('error', 'Permission does not exists.');
+    }
 }

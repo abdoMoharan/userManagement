@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
              'password' => Hash::make('123'),
              'mobile' => '01127449235',
              'type' => 'admin'
-         ]);
-    }
+         ])->assignRole('writer', 'admin');
+
+        }
 }

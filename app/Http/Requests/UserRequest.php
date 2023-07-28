@@ -37,8 +37,8 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string'],
             'email' => 'required', 'email', Rule::unique('users', 'email')->ignore($this->get('id')),
             'mobile' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
-            'password' => ['nullable', 'string', 'min:8', 'max:250'],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+
+            'image' => 'nullable',
             // 'roles' => ['required', 'array'],
             'status' => ['nullable'],
             'type' => ['nullable'],

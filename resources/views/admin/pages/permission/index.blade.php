@@ -1,9 +1,9 @@
 @extends('admin.dashboard')
-@section('titlePage','All users')
+@section('titlePage','All Pirmission')
 
 @section('breadcrumb')
 @parent
-<li class="breadcrumb-item active">users</li>
+<li class="breadcrumb-item active">Pirmission</li>
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -18,7 +18,7 @@
                         @include('admin.layouts.message')
                     </div>
                     <div class="col-md-3">
-                        <a href="{{route('admin.users.create')}}" class="btn btn-success float-right">Create <i class="fas fa-plus"></i></a>
+                        <a href="{{route('admin.permissions.create')}}" class="btn btn-success float-right">Create <i class="fas fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -30,46 +30,26 @@
                   <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Mobile</th>
-                    <th>Type</th>
-                    <th>Role</th>
-                    <th width="60">Action</th>
+                    <th >Action</th>
                   </tr>
                 </thead>
                 <tbody>
 
-                    @forelse ($users as $key => $item)
+                    @forelse ($permissions as $key => $item)
                     <tr>
                     <th>{{$loop->iteration}}</th>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->email}}</td>
-                    <td>{{$item->mobile}}</td>
-                    <td><span  class="badge bg-success">{{$item->type}}</span></td>
                     <td>
-                        <a href="{{route('admin.users.show',$item->id)}}" class="btn btn-primary btn-sm">Role</a>
-                    </td>
-                    <td class="d-flex justify-content-end">
 
-                   @if ($item->id != 1)
-                   @if ($item->status == 1 )
-                   {{-- Status Active --}}
-                   <a href="{{route('admin.users.update-status',$item->id)}}"
-                    class="btn btn-neutral btn-sm"><i class="fas fa-star text-success"></i></a>
-                   @else
-                   {{-- Status Unactive --}}
-                   <a href="{{route('admin.users.update-status',$item->id)}}"
-                    class="btn btn-neutral btn-sm"><i class="far fa-star text-warning"></i></a>
-                   @endif
-                   @endif
-                   <a href="{{route('admin.users.edit',$item->id)}}"
+
+                   <a href="{{route('admin.permissions.edit',$item->id)}}"
                     class="btn btn-neutral btn-sm" ><i class="fas fa-edit text-secondary"></i></a>
 
-                    @if ($item->id != 1)
+
                     <a data-toggle="modal" data-target="#exampleModal{{$item->id}}"
                         class="btn btn-neutral btn-sm" ><i class="fas fa-trash-alt text-danger"></i></a>
-                    @endif
-                    @include('admin.pages.user.delete')
+
+                    @include('admin.pages.permission.delete')
                     </td>
                     </tr>
                     @empty

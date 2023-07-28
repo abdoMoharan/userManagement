@@ -10,11 +10,11 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('admin/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                <img src="{{ asset(Auth::user()->image ?? 'admin/default/avatar-370-456322-1662765804.png') }}" class="img-circle elevation-2"
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="" class="d-block">{{ Auth::user()->name }}</a>
+                <a href="{{route('admin.profile.index')}}" class="d-block">{{ Auth::user()->name }}</a>
             </div>
         </div>
         <!-- SidebarSearch Form -->
@@ -42,15 +42,35 @@
                         </p>
                     </a>
                 </li>
+                @can('sidebar')
                 <li class="nav-item">
                     <a href="{{route('admin.users.index')}}"
                         class="nav-link {{ Route::is('admin.users.index') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
                         <p>
-                           user
+                           User
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.roles.index')}}"
+                        class="nav-link {{ Route::is('admin.roles.index') ? 'active' : '' }}">
+                        <i class="fas fa-hand-sparkles"></i>
+                        <p>
+                           Roles
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('admin.permissions.index')}}"
+                        class="nav-link {{ Route::is('admin.permissions.index') ? 'active' : '' }}">
+                        <i class="fas fa-project-diagram"></i>
+                        <p>
+                            Permissions
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 {{-- Logot ------------------------------- --}}
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

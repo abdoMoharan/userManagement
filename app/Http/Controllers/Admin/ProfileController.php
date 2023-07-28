@@ -10,9 +10,10 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        return view('admin.pages.profile.index',  ['user' => $request->user()]);
     }
 
     /**

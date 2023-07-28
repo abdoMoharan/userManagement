@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
    public function dashboard(){
-    return view('admin.pages.index');
+    $users = User::count();
+    return view('admin.pages.index',compact('users'));
    }
 }
